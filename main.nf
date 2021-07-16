@@ -32,7 +32,7 @@ process unzipFiles {
 
 // taxonomic classification
 process sourmash_signatures {
-    publishDir "${params.output}/sourmash_signatures", mode:'copy', pattern: ".fastq.sig"
+    publishDir "${params.output}/sourmash_signatures", mode:'copy', pattern: "*.fastq.sig"
     input:
         tuple val(name), path(fastq_reads) from unzipped_files
     output:
