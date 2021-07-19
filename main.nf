@@ -8,7 +8,7 @@ if (params.input)
     input_data_ch = Channel
     .fromPath(params.input)
     .map {file -> tuple(file.baseName, file)} //Filename 
-    .view() //Input struktur
+    .view() //Input structure
 }
 else 
 {
@@ -35,7 +35,7 @@ process download_db {
     output:
         path("*.json.gz") into database
     """
-    curl -L -o genbank-k31.lca.json.gz https://osf.io/4f8n3/download
+    wget -O genbank-k31.lca.json.gz https://osf.io/4f8n3/download
     """
 }
 
@@ -65,5 +65,5 @@ process sourmash_classification {
         --query ${signatures} \
         > ${name}_taxonomy.tsv
     
-    """     
+    """    
 }
