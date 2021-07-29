@@ -1,2 +1,5 @@
 # seq_data_analyzer
-Work in progress
+Taxonomy classification analyze workflow for fastq and fasta files.
+
+
+**Work in progress**
