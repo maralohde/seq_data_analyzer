@@ -1,10 +1,10 @@
 process sourmash_signatures {
 label 'sourmash'   
- publishDir "${params.output}/sourmash_signatures", mode:'copy', pattern: "*.fastq.gz.sig"
+ publishDir "${params.output}/sourmash_signatures", mode:'copy', pattern: "*.sig"
     input:
         tuple val(name), path(fastq_reads)
     output:
-        tuple val(name), path("*.fastq.gz.sig")
+        tuple val(name), path("*.sig")
     script:
     """
     sourmash sketch dna -p scaled=1000,k=31 --name-from-first ${fastq_reads}
