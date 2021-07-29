@@ -1,69 +1,42 @@
 #!/usr/bin/env nextflow
+nextflow.enable.dsl=2
+
 // params.input = true --> wenn input = true wird channel ausgeführt
 
-// data import
+if (params.input == true) { exit 1, "Please provide an fastq file via [--input]" }
+
+/************************** 
+* INPUTs
+**************************/
+
 if (params.input)
 {
     println "This is your input: "
     input_data_ch = Channel
-    .fromPath(params.input)
+    .fromPath(params.input, checkIfExists: true)
     .map {file -> tuple(file.baseName, file)} //Filename 
-    .view() //Input structure
+    .view() //show Input structure
 }
 else 
 {
-    println "Please define an input!"
+    println "Please provide an input!"
 }
     
-// process to unzip the fastq.gz files from input
-process unzipFiles {
-    publishDir "${params.output}/unzipped_files", mode: 'copy', pattern: "*.fastq"
-    input:
-        tuple val(name), path(fastq_reads) from input_data_ch // Tabelle mit zwei Spalten name und fastq_reads
-    output:
-        tuple val(name), path("*.fastq") into unzipped_files
-    script:
-    """
-    zcat ${fastq_reads} > ${name}
-    """
-}
+println "This is the input: " + params.input + "!" 
 
-//println "This is the input: " + params.example + "!" 
+/************************** 
+* Workflows
+**************************/
 
-process download_db {
-    publishDir "${params.output}/database", mode:'copy', pattern: "*.json.gz" 
-    output:
-        path("*.json.gz") into database
-    """
-    wget -O genbank-k31.lca.json.gz https://osf.io/4f8n3/download
-    """
-}
+include { taxonomy_classification_wf } from './workflows/taxonomy_classification.nf'
 
-// build signatures from fastq files
-process sourmash_signatures {
-    publishDir "${params.output}/sourmash_signatures", mode:'copy', pattern: "*.fastq.sig"
-    input:
-        tuple val(name), path(fastq_reads) from unzipped_files
-    output:
-        tuple val(name), path("*.fastq.sig") into sourmash_signatures
-    script:
-    """
-    sourmash sketch dna -p scaled=1000,k=31 --name-from-first ${fastq_reads}
-    """
-}
-process sourmash_classification {
-    publishDir "${params.output}/sourmash_classification", mode: 'copy', pattern: "${name}_taxonomy.tsv"
-    input:
-        tuple val(name), path(signatures) from sourmash_signatures
-        file query from database
-    output: 
-        tuple val(name), path("${name}_taxonomy.tsv") into sourmash_classification
-    script:
-    """
-    sourmash lca classify \
-        --db genbank-k31.lca.json.gz \
-        --query ${signatures} \
-        > ${name}_taxonomy.tsv
-    
-    """    
+
+/************************** 
+* MAIN WORKFLOW
+**************************/
+
+workflow {
+    if (params.input){ //wenn es einen Input gibt, führe diesen wf aus
+        taxonomy_classification_wf(input_data_ch) //workflow(input)
+    }
 }
