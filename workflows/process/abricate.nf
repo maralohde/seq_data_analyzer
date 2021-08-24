@@ -4,12 +4,14 @@ process abricate {
     input:
         tuple val(name), path(dir)
     output:
-        tuple val(name), path("*ncbi.tsv"), emit: abricate_output_ch
+        tuple val(name), path("*.tsv"), emit: abricate_output_ch
     script:
         """
         abricate ${dir} --nopath --quiet --mincov 80 --db ncbi >> "${name}"_abricate_ncbi.tsv
         abricate ${dir} --nopath --quiet --mincov 80 --db card >> "${name}"_abricate_card.tsv
         abricate ${dir} --nopath --quiet --mincov 80 --db vfdb >> "${name}"_abricate_vfdb.tsv
         abricate ${dir} --nopath --quiet --mincov 80 --db ecoh >> "${name}"_abricate_ecoh.tsv
+        abricate ${dir} --nopath --quiet --mincov 80 --db plasmidfinder >> "${name}"_abricate_plasmidfinder.tsv
+        abricate ${dir} --nopath --quiet --mincov 80 --db resfinder >> "${name}"_abricate_resfinder.tsv
         """
 }
