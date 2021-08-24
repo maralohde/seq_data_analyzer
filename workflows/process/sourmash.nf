@@ -22,7 +22,7 @@ label 'sourmash'
     script:
     """
     sourmash lca classify \
-        --db genbank-k31.lca.json.gz \
+        --db gtdb-rs202.genomic.k31.lca.json.gz \
         --query ${signatures} \
         > ${name}_taxonomy.tsv
     """  
