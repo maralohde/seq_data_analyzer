@@ -1,6 +1,6 @@
 process abricate {
     label 'abricate'
-    publishDir "${params.output}/abricate/", mode: 'copy', pattern: '*.tsv'
+    publishDir "${params.output}//${name}/abricate/", mode: 'copy', pattern: '*.tsv'
     input:
         tuple val(name), path(dir)
         each abricate_db

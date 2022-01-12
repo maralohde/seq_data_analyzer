@@ -1,4 +1,4 @@
-include { guppy_gpu } from './process/guppy'
+include { guppy_gpu } from './process/guppy.nf'
 
 workflow basecalling_wf {
     take: 
