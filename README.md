@@ -1,5 +1,6 @@
 # seq_data_analyzer
-Taxonomy classification analyze workflow for fastq and fasta files.
+Workflow for Analysing Nanopore Sequencing Runs.
+Taxonomy classification and Antibiotic Resistance detection.
 
 
 **Work in progress**
