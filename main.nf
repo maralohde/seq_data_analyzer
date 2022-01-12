@@ -28,7 +28,6 @@ if (params.fastq_pass)
 {
     fastq_pass_input_ch = Channel
     .fromPath(params.fastq_pass, checkIfExists: true)
-    //.filter(~"fasta")
     .map {file -> tuple(file.baseName, file)} //Filename
     println "This is your input: " + params.fasta 
     // .view() //show input structure
@@ -39,7 +38,6 @@ if (params.fast5)
 { 
     fast5_input_ch = Channel
     .fromPath(params.fast5, checkIfExists: true)
-    //.filter(~"fasta")
     .map {file -> tuple(file.baseName, file)} //Filename
     println "This is your input: " + params.fast5
     }

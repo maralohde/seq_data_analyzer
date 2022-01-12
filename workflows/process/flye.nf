@@ -1,6 +1,6 @@
 process flye {
     label 'flye'  
-    publishDir "${params.output}/${name}/flye/flye_unpolished", mode: 'copy', pattern: "assembly.fasta"
+    publishDir "${params.output}/flye/", mode: 'copy', pattern: "*.fasta"
   input:
     tuple val(name), path(read)
   output:
