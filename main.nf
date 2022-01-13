@@ -63,26 +63,64 @@ include {assembly_wf} from './workflows/assembly'
 **************************/
 
 workflow {
-    // Wenn es ein fastq input gibt, führe diesen wf aus
-    if (params.fastq){
-        taxonomy_classification_wf(fastq_input_ch) //workflow(input)
-    }  
 
-    //bei params.fasta führe diesen wf aus
-    if (params.fasta){
-        antibiotic_resistance_screening_wf(fasta_input_ch)
-    }
-
-    //basecalling 
+// Step 0 basecalling 
 
     if (params.fast5 && !params.fastq && !params.fastq_pass) {
             basecalling_wf(fast5_input_ch)
     }
 
+//Step 0.5 read qc
+
+//Step 1: Assembly of fastq_pass files 
     // Assembly of fastq_pass files
+    // Alignment to ref (minimap2)
+    // Polish (racon)
+    // medaka
     if (params.fastq_pass) {
             assembly_wf(fastq_pass_input_ch)
     }
+//Step 2 genome charakteristics
+    // needs plasmid detection and separation of them (plasflow separiert + inc von plasmidfinder)
+    // ABR, taxonomy, prokka (für annotaton)
+    if (params.fastq) {
+        taxonomy_classification_wf(fastq_input_ch) //workflow(input)
+    }  
+
+//bei params.fasta führe diesen wf aus
+    if (params.fasta) {
+        antibiotic_resistance_screening_wf(fasta_input_ch)
+    }
+
+
+
+// step 2 genome charakteristics
+    // needs plasmid detection and separation of them (plasflow separiert + inc von plasmidfinder)
+    // ABR, taxonomy, prokka (für annotaton)
+
+// step 3 clustering
+
+/*
+clustering based on e.g. kmer and or nucleotide identity or  psi-cd-hit
+gtdb für species clustern? gtdb-tk
+GTDB-tk based clustering
+map cluster-ID to species for report
+    */
+
+    // val (clusterID), val(name), path (fasta)
+
+
+// cluster analysis
+    // ACLAME (masking of mobile elements)
+    // chewbacca (cgmlst, snippy SNP calling)
+
+// plasmid analysis
+    // plasmid visualisation
+    // plasmid comparision
+    // clustering und transposon viz
+
+// REPORT
+    // 2  varianten (entweder von fastq aus oder fasta)
 }
 
 /************************** 
@@ -130,7 +168,7 @@ ${c_yellow}Inputs (choose one):${c_reset}
     --fastq         one fastq or fastq.gz file per sample or
                     multiple file-samples: --fastq 'sample_*.fastq.gz'
                     ${c_dim}[classification via sourmash]${c_reset}     
-    --fastq_pass    not implemented yet
+    --fastq_pass    not implemented yet [flye]
     --mixed         not implemented yet
 
 ${c_yellow}Parameters - Basecalling  (optional)${c_reset}
