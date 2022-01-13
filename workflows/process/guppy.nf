@@ -2,7 +2,7 @@ process guppy_gpu {
     label 'guppy_gpu'
         container = 'nanozoo/guppy_gpu:5.0.7-1--ec2c6e7'
         containerOptions '--gpus all'
-        publishDir "${params.output}/${params.readsdir}/", mode: 'copy'
+        publishDir "${params.output}/${params.readsdir}/", mode: 'copy', pattern: "*.fastq.gz"
     input:
         tuple val(name), path(dir)
     output:
