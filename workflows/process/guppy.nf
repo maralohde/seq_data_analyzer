@@ -3,7 +3,7 @@ process guppy_gpu {
         container = 'nanozoo/guppy_gpu:5.0.7-1--ec2c6e7'
         containerOptions '--gpus all'
 
-        publishDir "${params.output}/basecalling/", mode: 'copy'
+        publishDir "${params.output}/Reads/", mode: 'copy'
     input:
         tuple val(name), path(dir)
     output:
@@ -17,5 +17,7 @@ process guppy_gpu {
         
         mkdir -p fastq_tmp/
         cp fastq/*.txt fastq_tmp
+
+        mv *.fastq.gz basecalled.fastq.gz
         """
 }

@@ -56,7 +56,7 @@ if (params.fasta == true) { exit 1, "Please provide an fasta file via [--fasta]"
 include { taxonomy_classification_wf } from './workflows/taxonomy_classification.nf'
 include { antibiotic_resistance_screening_wf} from './workflows/antibiotic_resistance_screening_wf'
 include { basecalling_wf } from './workflows/basecalling.nf'
-include {assembly_wf} from './workflows/assembly'
+include { assembly_wf } from './workflows/assembly'
 
 /************************** 
 * MAIN WORKFLOW
@@ -91,8 +91,6 @@ workflow {
     if (params.fasta) {
         antibiotic_resistance_screening_wf(fasta_input_ch)
     }
-
-
 
 // step 2 genome charakteristics
     // needs plasmid detection and separation of them (plasflow separiert + inc von plasmidfinder)
